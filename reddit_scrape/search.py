@@ -10,10 +10,10 @@ import praw
 from praw.models import MoreComments
 from praw import Reddit
 
-CLIENT_ID = 'etAstulzAzEmtbmXhprohw'
-SECRET_TOKEN = ''
-USERNAME = ''
-PASSWORD = ''
+CLIENT_ID = "etAstulzAzEmtbmXhprohw"
+SECRET_TOKEN = ""
+USERNAME = ""
+PASSWORD = ""
 SEARCH_API_ADDRESS = "https://oauth.reddit.com/r/all/search?"
 
 
@@ -41,19 +41,21 @@ def update_login_headers() -> Dict:
     login in and update headers
     :return: headers
     """
-    assert USERNAME != ''
-    assert PASSWORD != ''
-    assert SECRET_TOKEN != ''
+    assert USERNAME != ""
+    assert PASSWORD != ""
+    assert SECRET_TOKEN != ""
     auth = requests.auth.HTTPBasicAuth(CLIENT_ID, SECRET_TOKEN)
-    data = {'grant_type': 'password',
-            'username': USERNAME,
-            'password': PASSWORD}
-    headers = {'User-Agent': 'PostSearch/0.0.1'}
+    data = {"grant_type": "password", "username": USERNAME, "password": PASSWORD}
+    headers = {"User-Agent": "PostSearch/0.0.1"}
 
-    res = requests.post('https://www.reddit.com/api/v1/access_token',
-                        auth=auth, data=data, headers=headers)
-    token = res.json()['access_token']
-    return {**headers, **{'Authorization': f"bearer {token}"}}
+    res = requests.post(
+        "https://www.reddit.com/api/v1/access_token",
+        auth=auth,
+        data=data,
+        headers=headers,
+    )
+    token = res.json()["access_token"]
+    return {**headers, **{"Authorization": f"bearer {token}"}}
 
 
 def search(query: str, headers: Dict, limit: int = 100,) -> List[str]:
@@ -64,23 +66,19 @@ def search(query: str, headers: Dict, limit: int = 100,) -> List[str]:
     :param limit:
     :return:
     """
-    params = {
-        "q": query,
-        "limit": limit
-    }
-    res = requests.get(
-        SEARCH_API_ADDRESS,
-        headers=headers,
-        params=params
-    )
+    params = {"q": query, "limit": limit}
+    res = requests.get(SEARCH_API_ADDRESS, headers=headers, params=params)
     res = res.json()
-    return ["https://www.reddit.com"+post["data"]["permalink"] for post in res["data"]["children"]]
+    return [
+        "https://www.reddit.com" + post["data"]["permalink"]
+        for post in res["data"]["children"]
+    ]
 
 
 def login_praw() -> Reddit:
-    assert USERNAME != ''
-    assert PASSWORD != ''
-    assert SECRET_TOKEN != ''
+    assert USERNAME != ""
+    assert PASSWORD != ""
+    assert SECRET_TOKEN != ""
     reddit = praw.Reddit(
         client_id=CLIENT_ID,
         client_secret=SECRET_TOKEN,
