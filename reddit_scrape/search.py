@@ -2,9 +2,17 @@ from typing import List, Dict, Tuple
 import time
 from os.path import exists
 from cryptography.fernet import Fernet
+from tqdm import trange
 
-from static_params import ENC_CLIENT_ID, ENC_PASSWORD, ENC_USERNAME, ENC_SECRET_TOKEN
+from static_params import (
+    ENC_CLIENT_ID,
+    ENC_PASSWORD,
+    ENC_USERNAME,
+    ENC_SECRET_TOKEN,
+    QUERIES,
+)
 
+import pandas as pd
 import requests
 import praw
 from praw.models import MoreComments
@@ -14,10 +22,11 @@ CLIENT_ID = ""
 SECRET_TOKEN = ""
 USERNAME = ""
 PASSWORD = ""
+
 SEARCH_API_ADDRESS = "https://oauth.reddit.com/r/all/search?"
 
 
-def decrypt():
+def decrypt_login_info():
     """
     call this function before all other functions
     decrypt secret token, username, password
@@ -109,27 +118,66 @@ def get_comments(url: str, reddit: Reddit) -> Tuple[List[str], List[str]]:
     return authors, comments
 
 
-def filter_addresses(authors: List[str], comments: List[str]) -> Tuple[List[str], List[str]]:
+def filter_addresses(
+    authors: List[str], comments: List[str]
+) -> Tuple[List[str], List[str]]:
     """
     delete comments without addresses
     :param authors:
     :param comments:
     :return:
     """
-    pass
+    filtered_authors = []
+    filtered_comments = []
+    for author, comment in zip(authors, comments):
+        address = find_address(comment)
+        if (
+            address
+            and (author not in filtered_authors)
+            and (address not in filtered_comments)
+        ):
+            filtered_authors.append(author)
+            filtered_comments.append(address)
+    return filtered_authors, filtered_comments
 
+
+def find_address(content: str) -> str:
+    """
+    judge whether a str contains an address
+    :param content: post or comment content
+    :return: the address we find or None
+    """
+    ind = content.find("0x")
+    if ind == -1:
+        return None
+    else:
+        return content[ind : ind + 40 + 2]
+
+
+def store_author_address(
+    authors: List[str], addresses: List[str], output_name="user_addresses.csv"
+) -> None:
+    df = pd.DataFrame(data={"user name": authors, "address": addresses})
+    df.to_csv(output_name, index=False)
 
 
 if __name__ == "__main__":
-    decrypt()
-    # headers = update_login_headers()
-    # results = search(query="ETH address",
-    #                  headers=headers)
-    # for r in results:
-    #     print(r)
-
-    url = "https://www.reddit.com/r/NFTsMarketplace/comments/qjkn6x/giveaway_elitenft_presents_diamond_death_50_up/"
+    decrypt_login_info()
+    headers = update_login_headers()
     reddit = login_praw()
-    authors, comments = get_comments(url, reddit)
-    for a in authors:
-        print(a)
+    for query in QUERIES:
+        results = search(query=query, headers=headers)
+        all_authors = []
+        all_comments = []
+        print(f"length of results {len(results)}")
+        for ind in trange(len(results)):
+            # print(url)
+            url = results[ind]
+            time.sleep(2)
+            # url = "https://www.reddit.com/r/NFTsMarketplace/comments/qjkn6x/giveaway_elitenft_presents_diamond_death_50_up/"
+            authors, comments = get_comments(url, reddit)
+            authors, comments = filter_addresses(authors, comments)
+            all_authors += authors
+            all_comments += comments
+
+    store_author_address(all_authors, all_comments)
