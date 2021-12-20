@@ -3,14 +3,14 @@ import time
 from os.path import exists
 from cryptography.fernet import Fernet
 
-from static_params import ENC_PASSWORD, ENC_USERNAME, ENC_SECRET_TOKEN
+from static_params import ENC_CLIENT_ID, ENC_PASSWORD, ENC_USERNAME, ENC_SECRET_TOKEN
 
 import requests
 import praw
 from praw.models import MoreComments
 from praw import Reddit
 
-CLIENT_ID = "etAstulzAzEmtbmXhprohw"
+CLIENT_ID = ""
 SECRET_TOKEN = ""
 USERNAME = ""
 PASSWORD = ""
@@ -30,7 +30,8 @@ def decrypt():
         key = input("input key for decryption: ")
     key = key.encode()
     fernet = Fernet(key)
-    global SECRET_TOKEN, USERNAME, PASSWORD
+    global CLIENT_ID, SECRET_TOKEN, USERNAME, PASSWORD
+    CLIENT_ID = fernet.decrypt(ENC_CLIENT_ID).decode()
     SECRET_TOKEN = fernet.decrypt(ENC_SECRET_TOKEN).decode()
     USERNAME = fernet.decrypt(ENC_USERNAME).decode()
     PASSWORD = fernet.decrypt(ENC_PASSWORD).decode()
@@ -41,6 +42,7 @@ def update_login_headers() -> Dict:
     login in and update headers
     :return: headers
     """
+    assert CLIENT_ID != ""
     assert USERNAME != ""
     assert PASSWORD != ""
     assert SECRET_TOKEN != ""
@@ -76,6 +78,7 @@ def search(query: str, headers: Dict, limit: int = 100,) -> List[str]:
 
 
 def login_praw() -> Reddit:
+    assert CLIENT_ID != ""
     assert USERNAME != ""
     assert PASSWORD != ""
     assert SECRET_TOKEN != ""
@@ -106,13 +109,25 @@ def get_comments(url: str, reddit: Reddit) -> Tuple[List[str], List[str]]:
     return authors, comments
 
 
+def filter_addresses(authors: List[str], comments: List[str]) -> Tuple[List[str], List[str]]:
+    """
+    delete comments without addresses
+    :param authors:
+    :param comments:
+    :return:
+    """
+    pass
+
+
+
 if __name__ == "__main__":
+    decrypt()
     # headers = update_login_headers()
     # results = search(query="ETH address",
     #                  headers=headers)
     # for r in results:
     #     print(r)
-    decrypt()
+
     url = "https://www.reddit.com/r/NFTsMarketplace/comments/qjkn6x/giveaway_elitenft_presents_diamond_death_50_up/"
     reddit = login_praw()
     authors, comments = get_comments(url, reddit)
