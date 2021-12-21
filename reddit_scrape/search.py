@@ -155,9 +155,9 @@ def find_address(content: str) -> str:
 
 
 def store_author_address(
-    authors: List[str], addresses: List[str], output_name="user_addresses.csv"
+    pairs: List[Tuple[str, str]], output_name="user_addresses.csv"
 ) -> None:
-    df = pd.DataFrame(data={"user name": authors, "address": addresses})
+    df = pd.DataFrame(data=pairs)
     df.to_csv(output_name, index=False)
 
 
@@ -167,8 +167,9 @@ if __name__ == "__main__":
     reddit = login_praw()
     for query in QUERIES:
         results = search(query=query, headers=headers)
-        all_authors = []
-        all_comments = []
+        #all_authors = []
+        #all_comments = []
+        authors_comments_pairs = set()
         print(f"length of results {len(results)}")
         for ind in trange(len(results)):
             # print(url)
@@ -177,7 +178,9 @@ if __name__ == "__main__":
             # url = "https://www.reddit.com/r/NFTsMarketplace/comments/qjkn6x/giveaway_elitenft_presents_diamond_death_50_up/"
             authors, comments = get_comments(url, reddit)
             authors, comments = filter_addresses(authors, comments)
-            all_authors += authors
-            all_comments += comments
+            # all_authors += authors
+            # all_comments += comments
+            for t in zip(authors, comments):
+                authors_comments_pairs.add(t)
 
-    store_author_address(all_authors, all_comments)
+    store_author_address(authors_comments_pairs, "user_addresses_removed_dup.csv")
