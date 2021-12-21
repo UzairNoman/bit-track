@@ -157,7 +157,7 @@ def find_address(content: str) -> str:
 def store_author_address(
     pairs: List[Tuple[str, str]], output_name="user_addresses.csv"
 ) -> None:
-    df = pd.DataFrame(data=pairs)
+    df = pd.DataFrame(data=pairs, columns=["user name", "address"])
     df.to_csv(output_name, index=False)
 
 
