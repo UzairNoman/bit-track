@@ -4,7 +4,7 @@ from os.path import exists
 from cryptography.fernet import Fernet
 from tqdm import trange
 
-from static_params import (
+from utils.static_params import (
     ENC_CLIENT_ID,
     ENC_PASSWORD,
     ENC_USERNAME,
@@ -32,8 +32,8 @@ def decrypt_login_info():
     decrypt secret token, username, password
     :return:
     """
-    if exists("./KEY_FILE"):
-        with open("./KEY_FILE") as f:
+    if exists("./utils/KEY_FILE"):
+        with open("./utils/KEY_FILE") as f:
             key = f.read()
     else:
         key = input("input key for decryption: ")

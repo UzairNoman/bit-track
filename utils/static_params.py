@@ -5,3 +5,5 @@ ENC_PASSWORD = b"gAAAAABhwIvSXGARNlcq_tLys1I_5As6OKeEmx2nc5LU8u_muCU_RsXNspbdZTn
 QUERIES = [
     "ETH address",
 ]
+
+ENC_ETH_TOKEN = b'gAAAAABh1qe89Tm-OXgmq16DmGycHvzsqxPLIlnC22xiME5YsqaJ50wxiuFdfgnh5xs6rCFrvd_rJhnuE-3k_Nd_wgB9P4gtlzKBSvyoGiPyKihr5PiStTCeLnO8YuhDZSHUGikLyB7t'
