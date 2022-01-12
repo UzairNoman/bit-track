@@ -22,6 +22,6 @@ with open("transaction_record.jsonl", "r") as f:
             del tran["gasUsed"]
             del tran["confirmations"]
             record["transactions"][i] = tran
-        with open("transaction_record_simplify.jsonl", "a") as f2:
+        with open("../merge_dataset/transaction_record_simplify.jsonl", "a") as f2:
             record = json.dumps(record)
             f2.write(record +"\n")
