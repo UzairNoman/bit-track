@@ -5,8 +5,8 @@ import json
 import pandas as pd
 
 count = 0
-balance_sheet = pd.read_csv("./user_addresses_balance.csv")
-with open("./transaction_record_simplify.jsonl", "r") as f:
+balance_sheet = pd.read_csv("../merge_dataset/user_addresses_balance.csv")
+with open("../merge_dataset/transaction_record_simplify.jsonl", "r") as f:
     for line in f.readlines():
         record = json.loads(line)
         address = record["address"]
