@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet
 import requests
 from tqdm import tqdm
 import json
+
 ETH_TOKEN = ""
 API_ADDRESS = "https://api.etherscan.io/api?"
 
@@ -31,7 +32,7 @@ def get_addresses_from_csv(csv_file: str) -> List[str]:
 
 def get_balance(address: str) -> float:
     assert ETH_TOKEN != ""
-    #addresses = ",".join(addresses)
+    # addresses = ",".join(addresses)
     params = {
         "module": "account",
         "action": "balance",
@@ -69,31 +70,25 @@ def get_transactions(address: str) -> str:
         "sort": "asc",
         "apikey": ETH_TOKEN,
     }
-    res = requests.get(
-        API_ADDRESS,
-        params=params
-    )
+    res = requests.get(API_ADDRESS, params=params)
     res = res.json()
     transactions = res["result"]
-    record = {
-        "address": address,
-        "transactions": transactions
-    }
+    record = {"address": address, "transactions": transactions}
     return json.dumps(record)
 
 
 def store_transactions(address_list: List[str], output_file: str) -> None:
-    if not exists("./Escan/"+output_file):
-        with open("./Escan/"+output_file, "w") as f:
+    if not exists("./Escan/" + output_file):
+        with open("./Escan/" + output_file, "w") as f:
             f.write("")
     else:
-        with open("./Escan/"+output_file, 'r+') as f:
+        with open("./Escan/" + output_file, "r+") as f:
             f.truncate(0)
     for address in tqdm(address_list):
         time.sleep(0.4)
         record = get_transactions(address)
-        with open("./Escan/"+output_file, "a") as f:
-            f.write(record +"\n")
+        with open("./Escan/" + output_file, "a") as f:
+            f.write(record + "\n")
 
 
 def store_balance(address_list: List[str], balance_list: List[float]) -> None:
@@ -104,17 +99,16 @@ def store_balance(address_list: List[str], balance_list: List[float]) -> None:
     df.to_csv("user_addresses_balance.csv", index=False)
 
 
-
 if __name__ == "__main__":
     decrypt_token()
-    address_list = get_addresses_from_csv("./reddit_scrape/user_addresses_removed_dup.csv")
+    address_list = get_addresses_from_csv(
+        "./reddit_scrape/user_addresses_removed_dup.csv"
+    )
     # address_list = ["0x56Eddb7aa87536c09CCc2793473599fD21A8b17F",
     #                 "0xC5dA9792E272691b890B29d4351268A3A9eD50d8",
     #                 "0xb915c55871d860666e740eda88389dfcd80112d6",
     #                 "0x1f6460410f226ca32a86874cfa725f1e7b3ebd61"]
     # balance_list = get_balance_list(address_list)
     # store_balance(address_list, balance_list)
-    #print((get_transactions(address_list[0])))
+    # print((get_transactions(address_list[0])))
     store_transactions(address_list, "transaction_record.jsonl")
-
-

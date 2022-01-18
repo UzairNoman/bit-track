@@ -69,9 +69,8 @@ if __name__ == "__main__":
         name = names[ind]
         time.sleep(1)
         res = find_user(name, headers)
-        df.loc[(df['user name'] == res["user name"], "icon_img")] = res["icon_img"]
-        df.loc[(df['user name'] == res["user name"],"account_creation_time")] = res["account_creation_time"]
+        df.loc[(df["user name"] == res["user name"], "icon_img")] = res["icon_img"]
+        df.loc[(df["user name"] == res["user name"], "account_creation_time")] = res[
+            "account_creation_time"
+        ]
     df.to_csv("test.csv", index=False)
-
-
-

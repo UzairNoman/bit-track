@@ -26,8 +26,12 @@ def count_active_account():
     count = 0
     balance_sheet = pd.read_csv("./merge_dataset/user_addresses_balance.csv")
     count = _count_active_account(balance_sheet)
-    print(f"==== #active account {count} in total , percentage {count / balance_sheet.shape[0] :.3f}")  # 2634
-    print(f"==== #deat account {balance_sheet.shape[0] - count} in total, percentage {1 - count / balance_sheet.shape[0]:.3f}")
+    print(
+        f"==== #active account {count} in total , percentage {count / balance_sheet.shape[0] :.3f}"
+    )  # 2634
+    print(
+        f"==== #deat account {balance_sheet.shape[0] - count} in total, percentage {1 - count / balance_sheet.shape[0]:.3f}"
+    )
 
 
 def count_total_reddit():
@@ -40,11 +44,15 @@ def count_matches_twitter():
     final_info = pd.read_csv("./merge_dataset/user_addresses_balance.csv")
     total_reddit = final_info.shape[0]
     has_twitter = twitter_append[~twitter_append["twitter_username"].isna()]
-    has_twitter.to_csv("./revelation/addresses_with_twitter.csv", index=False )
+    has_twitter.to_csv("./revelation/addresses_with_twitter.csv", index=False)
     active_account = _count_active_account(has_twitter)
 
-    print(f"==== #matches in twitter : {has_twitter.shape[0]}; percentage : {has_twitter.shape[0] / total_reddit : .2f}")
-    print(f"==== #matches in twitter with active address : {active_account}; percentage : {active_account / has_twitter.shape[0]: .2f}")
+    print(
+        f"==== #matches in twitter : {has_twitter.shape[0]}; percentage : {has_twitter.shape[0] / total_reddit : .2f}"
+    )
+    print(
+        f"==== #matches in twitter with active address : {active_account}; percentage : {active_account / has_twitter.shape[0]: .2f}"
+    )
 
 
 if __name__ == "__main__":

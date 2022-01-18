@@ -167,8 +167,8 @@ if __name__ == "__main__":
     reddit = login_praw()
     for query in QUERIES:
         results = search(query=query, headers=headers)
-        #all_authors = []
-        #all_comments = []
+        # all_authors = []
+        # all_comments = []
         authors_comments_pairs = set()
         print(f"length of results {len(results)}")
         for ind in trange(len(results)):

@@ -24,4 +24,4 @@ with open("transaction_record.jsonl", "r") as f:
             record["transactions"][i] = tran
         with open("../merge_dataset/transaction_record_simplify.jsonl", "a") as f2:
             record = json.dumps(record)
-            f2.write(record +"\n")
+            f2.write(record + "\n")

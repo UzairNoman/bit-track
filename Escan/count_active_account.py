@@ -17,5 +17,4 @@ with open("../merge_dataset/transaction_record_simplify.jsonl", "r") as f:
             print(balance["balance"].values[0])
         if balance > 0 and len(record["transactions"]) > 0:
             count += 1
-print(f"#active account {count}, percentage {count / balance_sheet.shape[0]}") # 2634
-
+print(f"#active account {count}, percentage {count / balance_sheet.shape[0]}")  # 2634

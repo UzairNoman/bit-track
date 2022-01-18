@@ -1,4 +1,5 @@
-./.idea
+.idea
 __pycache__
 KEY_FILE
 encrypted.py
+Escan/transaction_record.jsonl
