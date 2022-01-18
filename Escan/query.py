@@ -108,7 +108,9 @@ if __name__ == "__main__":
     #                 "0xC5dA9792E272691b890B29d4351268A3A9eD50d8",
     #                 "0xb915c55871d860666e740eda88389dfcd80112d6",
     #                 "0x1f6460410f226ca32a86874cfa725f1e7b3ebd61"]
-    # balance_list = get_balance_list(address_list)
-    # store_balance(address_list, balance_list)
+    print("Query for balance")
+    balance_list = get_balance_list(address_list)
+    store_balance(address_list, balance_list)
     # print((get_transactions(address_list[0])))
+    print("Query for transactions")
     store_transactions(address_list, "transaction_record.jsonl")

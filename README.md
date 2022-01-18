@@ -53,26 +53,74 @@ mv PATH_TO_THE_KEY_FILE/KEY_FILE ./utils/
 
 ## Usage
 
-### Scrape Reddit
+### 1. Scrape Reddit
+
+```bash
+cd bit-track 
+python -m reddit_scrape.search
+python -m reddit_scrape.reddit_more_info
+```
+
+`reddit_scrape/search.py` and `reddit_scrape/reddit_more_info.py` are responsible for scraping  user info and addresses from Reddit.
+
+- `reddit_scrape/search.py` will search queries from `utils/static_params.py` and get 100 results for each query. For each result, we will iterate all comments for valid addresses. The result is stored as `reddit_scrape/user_addresses_removed_dup.csv`. It will take about 5 minutes.
+- `reddit_scrape/reddit_more_info.py` will read the `reddit_scrape/user_addresses_removed_dup.csv` generated before, access the Reddit API for more personal info, like avatars and account creation date, for each record. It will take about 3 hours. 
 
 
-### Scrape Twitter
-Make sure to have pandas installed `pip install pandas` `conda install -c anaconda pandas`.
-You can tinker with the code using deds.ipynb code or simply run the main.py file. The file contains the necessary sleep function which runs after 450 twitter API calls to workaround the rate limiting of twitter APIs.
 
-Leave the code running for hours :)
+### 2. Scrape Twitter
+```bash
+cd bit-track
+python -m twitter_fetch.main
+```
 
-![Screenshot_5](https://user-images.githubusercontent.com/12785891/149800129-20fea26b-b4ac-4346-8af8-8a2ae441af35.jpg)
+- `twitter_fetch/main.py` will read `reddit_scrape/user_addresses_removed_dup.csv` generated before, access the API from twitter to search for posts containing address in each record from Reddit, and to obtain the Twitter user information to `twitter_data_append.csv`. 
+- The file contains the necessary sleep function which runs after 450 Twitter API calls to work around the rate limiting of Twitter APIs. It will approximately take 9 hours.
+
+### 3. Scrape Etherscan 
+
+```bash
+cd bit-track
+python -m Escan.query
+```
+
+- `Escan/query.py` will read `./reddit_scrape/user_addresses_removed_dup.csv` and query Etherscan API for balance and transaction history. 
+- The results are stored as file `user_addresses_balance.csv` and `transaction_record.jsonl`
+- Query for balance will take 2 hours and query for transactions will take 3 hours or so.
+
+```bash 
+cd Escan
+python clean_tran_records.py
+```
+
+- `Escan/clean_tran_records.py` is used to delete several attributes from transaction history.
+- The output is `transaction_record_simplify.jsonl`
+
+### 4. Merge Dataset 
+
+```bash
+cd merge_dataset
+python merge_dataset.py
+```
+
+- `merge_dateset/merge_dataset.py` will merge data from Reddit, Twitter and balance together and generate `final_info.csv`
+- `final_info.csv` is further merged with transaction history and result in `final_info_transactions.jsonl`.
+- These final results are used in `bit-track-app`, the web front, for final demonstration.
 
 
+### 5. Data Analysis 
+```bash
+cd bit-track
+python -m revelation.data_analysis
+```
 
-### Scrape Etherscan 
+- count how many active accounts, how many matches in Twitter. 
 
-
-### Merge Dataset 
-
-
-### Data Analysis 
+```bash
+cd revelation
+python analyze_personal_info.py
+```
+- count how many mails, links in Twitter descriptions. 
 
 
 ## Contact 
