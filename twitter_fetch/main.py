@@ -7,6 +7,7 @@ from twitter_fetch.dummy import dummy_dataset
 from utils.static_params import TWITTER_TOKEN
 from os.path import exists
 
+
 def twitter_api(q_string):
     if exists("./utils/KEY_FILE"):
         with open("./utils/KEY_FILE") as f:

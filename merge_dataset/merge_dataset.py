@@ -71,7 +71,11 @@ def merge_all_info_to_jsonl(final_info: str, transactions: str, output: str) -> 
 
 
 if __name__ == "__main__":
-    result = merge_reddit_twitter_balance("./reddit_more_info.csv", "./twitter_data_append.csv", "./user_addresses_balance.csv")
+    result = merge_reddit_twitter_balance(
+        "./reddit_more_info.csv",
+        "./twitter_data_append.csv",
+        "./user_addresses_balance.csv",
+    )
     result.to_csv("./final_info.csv", index=False)
     merge_all_info_to_jsonl(
         "./final_info.csv",
