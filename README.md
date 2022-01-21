@@ -1,4 +1,4 @@
-# bit-track
+# ETH Explorer
 A project for Blockchain(ETH) user identity revelation in Seminar *Data Ethics and Data Security* WS2021.  
 
 <details>
