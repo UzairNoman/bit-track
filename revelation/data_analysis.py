@@ -30,7 +30,7 @@ def count_active_account():
         f"==== #active account {count} in total , percentage {count / balance_sheet.shape[0] :.3f}"
     )  # 2634
     print(
-        f"==== #deat account {balance_sheet.shape[0] - count} in total, percentage {1 - count / balance_sheet.shape[0]:.3f}"
+        f"==== #dead account {balance_sheet.shape[0] - count} in total, percentage {1 - count / balance_sheet.shape[0]:.3f}"
     )
 
 
